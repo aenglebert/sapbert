@@ -72,7 +72,7 @@ def parse_args():
     parser.add_argument('--amp', action="store_true", 
             help="automatic mixed precision training")
     parser.add_argument('--parallel', action="store_true") 
-    #parser.add_argument('--cased', action="store_true") 
+    #parser.add_argument('--cased', action="store_true")
     parser.add_argument('--pairwise', action="store_true",
             help="if loading pairwise formatted datasets") 
     parser.add_argument('--random_seed',
@@ -84,7 +84,9 @@ def parse_args():
     parser.add_argument('--use_miner', action="store_true") 
     parser.add_argument('--miner_margin', default=0.2, type=float) 
     parser.add_argument('--type_of_triplets', default="all", type=str) 
-    parser.add_argument('--agg_mode', default="cls", type=str, help="{cls|mean|mean_all_tok}") 
+    parser.add_argument('--agg_mode', default="cls", type=str, help="{cls|mean|mean_all_tok}")
+    parser.add_argument('--trust_remote_code', action="store_false",
+                        help="allow for custom models defined in their own modeling files")
 
     args = parser.parse_args()
     return args
@@ -231,9 +233,10 @@ def main(args):
         path=args.model_dir,
         max_length=args.max_length,
         use_cuda=args.use_cuda,
+        trust_remote_code=args.trust_remote_code,
         #lowercase=not args.cased
     )
-    
+
     # load SAP model
     model = Sap_Metric_Learning(
             encoder = encoder,
